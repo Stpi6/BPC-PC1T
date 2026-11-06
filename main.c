@@ -78,9 +78,9 @@ struct zapis
     struct driver
     {
 
-        char jmeno[32];
+        char jmeno[33];
 
-        char prijmeni[32];
+        char prijmeni[33];
 
         int id;
 
@@ -89,7 +89,7 @@ struct zapis
     
     struct car
     {
-        char auto_spz[8];
+        char auto_spz[9];
 
         int najezd;
 
@@ -99,9 +99,9 @@ struct zapis
     struct time
     {
 
-        char zacatek[5];
+        char zacatek[6];
 
-        char konec[5];
+        char konec[6];
 
     } doba;
 
@@ -127,9 +127,9 @@ int main()
 
     //Zjistit pokud heslo existuje a zavolat prihlaseni if kontrola_pozadavku_hesla 
 
-    char heslo[32];
+    char heslo[33];
 
-    char ulozene_heslo[32];
+    char ulozene_heslo[33];
 
     int vybrano_menu;
 
@@ -155,10 +155,11 @@ int main()
 
         //Novy zapis
             case 1:
-                
-                printf("%d", jizda1.datum.den);
 
-                i = 0;
+                scanf("%s", jizda1.doba.zacatek); // 12:45
+                scanf("%s", jizda1.doba.konec);   // 15:30
+
+                printf("Zacatek je: %s\n", jizda1.doba.zacatek);
             break;
 
 
