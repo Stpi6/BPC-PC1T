@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
-
+#include <stdlib.h>
 
 int zkouska_delky(char zk[])
 {
@@ -164,6 +164,7 @@ int main()
 
         //Upravit stavajici zapis
             case 2:
+                system("cls");
                 printf("B");
 
                 i = 0;
