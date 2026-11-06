@@ -1,52 +1,44 @@
 #include <stdio.h>
 #include <ctype.h>
 
-int zjisteni_delky(char text[])
+
+int zkouska_delky(char zk[])
 {
     int x = 0;
 
-    while(text[x] =! '\0')
+    while(zk[x] != '\0')
     {
         x++;
 
     }
 
-    return x;
+    if(x < 8) return 0;
 
+    else return x;
 }
+// return x - splnuje           return 0 - nesplnuje 
 
-
-int kontrola_nas_hesla(char kon_nas_heslo[])
+int kontrola_pozadavku_hesla(char kon_heslo[])
 {
-
-    if(zjisteni_delky(kon_nas_heslo) < 8) 
-    {
-        printf("Zadejte heslo ve správném tvaru.");
-
-        return 0;
-    }
-
-    else{
-
         int cislo = 0;
 
         int velke_pismeno = 0;
 
         int specialni_znak = 0;
 
-        for(int i = 0; i <= zjisteni_delky(kon_nas_heslo); i++)
+        for(int i = 0; i <= zkouska_delky(kon_heslo); i++)
         {
-            if(specialni_znak =! 1 &&((kon_nas_heslo[i] >= '!' && kon_nas_heslo[i] <= '/') || (kon_nas_heslo[i] >= ':' && kon_nas_heslo[i] <= '@') || (kon_nas_heslo[i] >= '[' && kon_nas_heslo[i] <= 96) || (kon_nas_heslo[i] >= 123 && kon_nas_heslo[i] <= 126)))
+            if(specialni_znak != 1 &&((kon_heslo[i] >= '!' && kon_heslo[i] <= '/') || (kon_heslo[i] >= ':' && kon_heslo[i] <= '@') || (kon_heslo[i] >= '[' && kon_heslo[i] <= 96) || (kon_heslo[i] >= 123 && kon_heslo[i] <= 126)))
             {
                 specialni_znak = 1;
             }
 
-            if(cislo =! 1 && isdigit(kon_nas_heslo[i]) > 0)
+            if(cislo != 1 && isdigit(kon_heslo[i]) > 0)
             {
                 cislo = 1;
             }
 
-            if(velke_pismeno =! 1 && (kon_nas_heslo[i] >= 'A' && kon_nas_heslo[i] <= 'Z'))
+            if(velke_pismeno != 1 && (kon_heslo[i] >= 'A' && kon_heslo[i] <= 'Z'))
             {
                 velke_pismeno = 1;
             }
@@ -56,33 +48,76 @@ int kontrola_nas_hesla(char kon_nas_heslo[])
 
         if(specialni_znak > 0 && cislo > 0 && velke_pismeno > 0) 
         {
-            printf("Heslo bylo nastaveno a uloženo");
-
             return 1;
+
         }
-    }
+        else return 0;
 
 }
+// return 1 - splnuje           return 0 - nesplnuje
 
-int nastaveni_hesla(char nas_heslo[])
+void ulozeni_hesla(char zapsane[], char ulozene[])
 {
 
-    if(kontrola_nas_hesla(nas_heslo) == 1) 
-    {
-        return 1;
+    int h = 0;
 
-    }    
-    else if (nas_heslo[0] == 6 && nas_heslo[1] == '\0')
+    while(h <= zkouska_delky(zapsane))
     {
-        return 6;
+        ulozene[h] = zapsane[h];
 
-    }
-    
-    
+        h++;
+    } 
+
 }
+// ulozi napsane heslo do ulozene_heslo[]
 
 
+struct zapis
+{
 
+    struct driver
+    {
+
+        char jmeno[32];
+
+        char prijmeni[32];
+
+        int id;
+
+    } ridic;
+
+    
+    struct car
+    {
+        char auto_spz[8];
+
+        int najezd;
+
+    } autoo;
+    
+
+    struct time
+    {
+
+        char zacatek[5];
+
+        char konec[5];
+
+    } doba;
+
+   
+
+     struct date
+    {
+            int den;
+
+            int mesic;
+
+            int rok;
+
+    } datum;
+
+};
 
 
 int main()
@@ -90,110 +125,112 @@ int main()
 
     //MAZANI TERMINALU FCE????
 
-    //Zjistit pokud heslo existuje a zavolat prihlaseni
+    //Zjistit pokud heslo existuje a zavolat prihlaseni if kontrola_pozadavku_hesla 
 
-    char heslo[20] = {0, '\0', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+    char heslo[32];
+
+    char ulozene_heslo[32];
 
     int vybrano_menu;
 
     int i = 0;
+
+    struct zapis jizda1;
+
+
+
+
+
 
     while(1)
     {
 
         printf("\r\nMENU\r\n\n1 - Novy zapis\r\n2 - Upravit stavajici zapis\r\n3 - Smazat zapis\r\n4 - Vypsat zapis/y\r\n5 - Nastavit heslo\r\n6 - konec\r\n\n");
 
-        
-
-
-
         scanf("%d",&vybrano_menu);
 
-        switch (vybrano_menu) {
+        // CHYBA PRI ZADANI CISEL MISTO PISMEN
+        
+            switch (vybrano_menu) {
 
         //Novy zapis
-        case 1:
-             
+            case 1:
+                
+                printf("%d", jizda1.datum.den);
 
-            i = 0;
-        break;
+                i = 0;
+            break;
 
 
         //Upravit stavajici zapis
-        case 2:
-            printf("B");
+            case 2:
+                printf("B");
 
-            i = 0;
-        break;
+                i = 0;
+            break;
 
 
         //Smazat zapis
-        case 3:
-            printf("C");
+            case 3:
+                printf("C");
 
-            i = 0;
-        break;
+                i = 0;
+            break;
 
 
         //Vypsat zapis/y
-        case 4:
-            printf("D");
+            case 4:
+                printf("D");
 
-            i = 0;
-        break;
+                i = 0;
+            break;
 
 
         //Nastavit Heslo
-        case 5:
+            case 5:
             
-        while (1)
-        {
+            while (1)
+            {
         
             //smazani terminalu
 
-            printf("Zadejte silne heslo(minimalni pozadavky: \r\n8 znaku\r\n1 velke pismeno\r\n1 cislo\r\n1 specialni znak)\r\n\nMoje heslo: ");
+                printf("Zadejte silne heslo - pozadavky: \r\nminimalne 8 a maximalne 32 znaku\r\nminimalne 1 velke pismeno\r\nminimalne 1 cislo\r\nminimalne 1 specialni znak\r\n(Pro navrat zpet do MENU zadejte 6)\r\n\nMoje heslo: ");
 
-            scanf("%s", &heslo);
+                scanf("%s", &heslo);
+            
+                if(zkouska_delky(heslo) == 0 && heslo[0] == '6' && heslo[1] == '\0') break;
+            
+                else if(zkouska_delky(heslo) == 0) printf("\r\nHeslo je moc kratke.\r\n");            
 
-            if (nastaveni_hesla(heslo) == 1)
-            {
-                break;
-            }
-            
-            else if (nastaveni_hesla(heslo) == 6)
-            {
-                break;
-            }
+                else
+                {
+                    if(kontrola_pozadavku_hesla(heslo) == 1) 
+                    {
+                        printf("\r\nHeslo bylo nastaveno a ulozeno\r\n");
 
-            if (kontrola_nas_hesla(heslo) == 0)
-            {
-                kontrola_nas_hesla(heslo);
+                        ulozeni_hesla(heslo, ulozene_heslo);
+
+                        printf("\r\n%s\r\n", ulozene_heslo); 
+
+                        break;
+                    }
+                    else printf("\r\nHeslo nesplnuje pozadavky.\r\n");
+
+                }
+
             }
-            
-            
-        }
-        break;
+            break;
 
 
         //Konec
-        case 6:
-            printf("F");
-        break;
+            case 6:
+            
+            return 6;
+            
 
-        default:
-            printf("Vyberte platnou moznost");
-            i++;
-        break;
         }
-
-        if (i == 3) break;
-
-    
+            
     }
 
-    printf("\r\nKonec\r\n");
-
-    
-
-    return 0;
+   return 0;
 }
