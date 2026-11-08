@@ -1,6 +1,54 @@
 #include <stdio.h>
 #include <ctype.h>
 
+//POLE STRUKTUR A FOR PRISTUP PRES GLOBAL I SKRZE POINTER
+struct zapis
+{
+
+    struct driver
+    {
+
+        char jmeno[33];
+
+        char prijmeni[33];
+
+        char id[7];
+
+    } ridic;
+
+    
+    struct car
+    {
+        char auto_spz[9];
+
+        int najezd;
+
+    } autoo;
+    
+
+    struct time
+    {
+
+        char zacatek[6];
+
+        char konec[6];
+
+    } doba;
+
+   
+
+     struct date
+    {
+            int den;
+
+            int mesic;
+
+            int rok;
+
+    } datum;
+
+};
+
 
 int zkouska_delky(char zk[])
 {
@@ -71,55 +119,64 @@ void ulozeni_hesla(char zapsane[], char ulozene[])
 }
 // ulozi napsane heslo do ulozene_heslo[]
 
-
-
-//POLE STRUKTUR A FOR PRISTUP PRES GLOBAL I SKRZE POINTER
-struct zapis
+void novy_zapis(struct zapis* f)
 {
+      
+        //  DATUM
+        printf("\r\nZadejte cislo aktualniho/dnesniho dne v mesici:  ");
 
-    struct driver
-    {
+        scanf("%d", &f->datum.den);
 
-        char jmeno[33];
+        printf("\r\nZadejte cislo aktualniho/dnesniho mesice:  ");
 
-        char prijmeni[33];
+        scanf("%d", &f->datum.mesic);
 
-        int id;
+        printf("\r\nZadejte cislo aktualniho/dnesniho roku:  ");
 
-    } ridic;
+        scanf("%d", &f->datum.rok);
 
-    
-    struct car
-    {
-        char auto_spz[9];
 
-        int najezd;
 
-    } autoo;
-    
+        //  RIDIC
+        printf("\r\nZadejte sve jmeno:  ");
+        
+        scanf("%s", &f->ridic.jmeno);
 
-    struct time
-    {
+        printf("\r\nZadejte sve prijmeni:  ");
 
-        char zacatek[6];
+        scanf("%s", &f->ridic.prijmeni);
 
-        char konec[6];
+        printf("\r\nZadejte sve ID:  ");
 
-    } doba;
+        scanf("%s", &f->ridic.id);
 
-   
 
-     struct date
-    {
-            int den;
 
-            int mesic;
+        //  AUTO INFO
+        printf("\r\nZadejte SPZ vami pouziteho auta pro zapisovanou jizdu:  ");
 
-            int rok;
+        scanf("%s", &f->autoo.auto_spz);
 
-    } datum;
+        printf("\r\nZadejte pocet ujetych kolimetru se zapsanym autem za zapisovanou jizdu:  ");
+        
+        scanf("%d", &f->autoo.najezd);
 
-};
+
+
+        //  DOBA LETU..
+        printf("\r\nZadejte priblizny zacatek zapisovane jizdy ve formatu XX:XX:  ");
+
+        scanf("%s", &f->doba.zacatek);
+
+        printf("\r\nZadejte priblizny konec zapisovane jizdy ve formatu XX:XX :  ");
+
+        scanf("%s", &f->doba.konec);
+
+
+        printf("Dekujeme, Vase jizda byla uspesne zapsana a uložena.");
+
+
+}
 
 
 int main()
@@ -135,9 +192,11 @@ int main()
 
     int vybrano_menu;
 
-    int i = 0;
+    int i = 0; //   NEMAM TUSENI CO TU DELA
 
-    struct zapis jizda1;
+    int id_struct_pole = 0;
+
+    struct zapis jizda[100];
 
 
 
@@ -161,10 +220,12 @@ int main()
         //Novy zapis
             case 1:
 
-                scanf("%s", jizda1.doba.zacatek); // 12:45
-                scanf("%s", jizda1.doba.konec);   // 15:30
+                novy_zapis(&jizda[id_struct_pole]);    
 
-                printf("Zacatek je: %s\n", jizda1.doba.zacatek);
+                printf("\r\nDatum: %d.%d.%d\r\nJmeno ridice: %s\r\nPrijmeni ridice: %s\r\nID ridice: %s\r\nSPZ auta: %s\r\nNajezd auta: %d\r\nDoba jizdy: %s - %s", jizda[id_struct_pole].datum.den, jizda[id_struct_pole].datum.mesic, jizda[id_struct_pole].datum.rok, jizda[id_struct_pole].ridic.jmeno, jizda[id_struct_pole].ridic.prijmeni, jizda[id_struct_pole].ridic.id, jizda[id_struct_pole].autoo.auto_spz, jizda[id_struct_pole].autoo.najezd, jizda[id_struct_pole].doba.zacatek, jizda[id_struct_pole].doba.konec);
+
+                id_struct_pole++;
+
             break;
 
 
@@ -184,7 +245,7 @@ int main()
             break;
 
 
-        //Vypsat zapis/y
+        //Vypsat zapis/y - orientovat se podle id_struct_pole a podle toho nabidnout pocet zapisu k dispozici - scanf do promee a podle toho vypsat strukturu
             case 4:
                 printf("D");
 
