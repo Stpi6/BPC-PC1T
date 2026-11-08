@@ -72,6 +72,8 @@ void ulozeni_hesla(char zapsane[], char ulozene[])
 // ulozi napsane heslo do ulozene_heslo[]
 
 
+
+//POLE STRUKTUR A FOR PRISTUP PRES GLOBAL I SKRZE POINTER
 struct zapis
 {
 
@@ -149,6 +151,9 @@ int main()
 
         scanf("%d",&vybrano_menu);
 
+        //if(isdigit(vybrano_menu) > 0)
+        //{ ZJISTIT KDE JE CHYBA
+        
         // CHYBA PRI ZADANI CISEL MISTO PISMEN
         
             switch (vybrano_menu) {
@@ -211,7 +216,7 @@ int main()
 
                         ulozeni_hesla(heslo, ulozene_heslo);
 
-                        printf("\r\n%s\r\n", ulozene_heslo); 
+                        //printf("\r\n%s\r\n", ulozene_heslo); PRO KONTROLU 
 
                         break;
                     }
@@ -227,10 +232,21 @@ int main()
             case 6:
             
             return 6;
+
+            default:
+
+            printf("Vyberte jednu z nabizenych moznosti  %d", vybrano_menu);            
+
+            break;
             
 
         }
-            
+    
+    //}
+
+    //else printf("Vyberte jednu z nabizenych moznosti  %s", vybrano_menu);
+
+        
     }
 
    return 0;
