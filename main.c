@@ -177,7 +177,7 @@ void novy_zapis(struct zapis* f)
 
 
 }
-
+void smazani_zapisu(
 
 int main()
 {
@@ -217,7 +217,7 @@ int main()
         
             switch (vybrano_menu) {
 
-        //Novy zapis
+        //Novy zapis - prepsat tak aby i po smazani zapisu uprostred se novy zapis zapsal do prvni volne bunky a pak aby pokracoval v zapisovani postupne
             case 1:
 
                 novy_zapis(&jizda[id_struct_pole]);    
@@ -229,7 +229,7 @@ int main()
             break;
 
 
-        //Upravit stavajici zapis
+        //Upravit stavajici zapis - bud podle ciselzapisu nebo vypsat ke kazdemu zapisu ktery jde upravit prijmeni  a datum pro lepsi orientaci
             case 2:
                 printf("B");
 
@@ -237,7 +237,7 @@ int main()
             break;
 
 
-        //Smazat zapis
+        //Smazat zapis - bud podle ciselzapisu nebo vypsat ke kazdemu zapisu ktery jde upravit prijmeni a datum pro lepsi orientaci
             case 3:
                 printf("C");
 
