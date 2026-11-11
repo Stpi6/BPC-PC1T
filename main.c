@@ -205,7 +205,7 @@ int main()
 
     while(1)
     {
-
+        system("cls");
         printf("\r\nMENU\r\n\n1 - Novy zapis\r\n2 - Upravit stavajici zapis\r\n3 - Smazat zapis\r\n4 - Vypsat zapis/y\r\n5 - Nastavit heslo\r\n6 - konec\r\n\n");
 
         scanf("%d",&vybrano_menu);
@@ -219,7 +219,7 @@ int main()
 
         //Novy zapis - prepsat tak aby i po smazani zapisu uprostred se novy zapis zapsal do prvni volne bunky a pak aby pokracoval v zapisovani postupne
             case 1:
-
+                system("cls");
                 novy_zapis(&jizda[id_struct_pole]);    
 
                 printf("\r\nDatum: %d.%d.%d\r\nJmeno ridice: %s\r\nPrijmeni ridice: %s\r\nID ridice: %s\r\nSPZ auta: %s\r\nNajezd auta: %d\r\nDoba jizdy: %s - %s", jizda[id_struct_pole].datum.den, jizda[id_struct_pole].datum.mesic, jizda[id_struct_pole].datum.rok, jizda[id_struct_pole].ridic.jmeno, jizda[id_struct_pole].ridic.prijmeni, jizda[id_struct_pole].ridic.id, jizda[id_struct_pole].autoo.auto_spz, jizda[id_struct_pole].autoo.najezd, jizda[id_struct_pole].doba.zacatek, jizda[id_struct_pole].doba.konec);
@@ -231,6 +231,7 @@ int main()
 
         //Upravit stavajici zapis - bud podle ciselzapisu nebo vypsat ke kazdemu zapisu ktery jde upravit prijmeni  a datum pro lepsi orientaci
             case 2:
+                system("cls");
                 printf("B");
 
                 i = 0;
@@ -239,6 +240,7 @@ int main()
 
         //Smazat zapis - bud podle ciselzapisu nebo vypsat ke kazdemu zapisu ktery jde upravit prijmeni a datum pro lepsi orientaci
             case 3:
+                system("cls");
                 printf("C");
 
                 i = 0;
@@ -247,6 +249,7 @@ int main()
 
         //Vypsat zapis/y - orientovat se podle id_struct_pole a podle toho nabidnout pocet zapisu k dispozici - scanf do promee a podle toho vypsat strukturu
             case 4:
+                system("cls");
                 printf("D");
 
                 i = 0;
@@ -255,7 +258,7 @@ int main()
 
         //Nastavit Heslo
             case 5:
-            
+            system("cls");
             while (1)
             {
         
