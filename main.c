@@ -194,7 +194,7 @@ int main()
 
     int i = 0; //   NEMAM TUSENI CO TU DELA
 
-    int id_struct_pole = 0;
+    int id_struct_pole = 0; //   POMOCNA PROMENA PRO PRISTUP K POLE STRUKTUR A JEJICH VYPSANI
 
     struct zapis jizda[100];
 
