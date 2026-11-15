@@ -27,6 +27,8 @@ int main()
         if(prihlaseni(ulozene_heslo) == 0) return 0;
     }
 
+    id_struct_pole = nacti_zapisy_z_csv(jizda);
+
     while(1)
     {
         
