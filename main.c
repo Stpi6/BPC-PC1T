@@ -177,7 +177,7 @@ void novy_zapis(struct zapis* f)
 
 
 }
-void smazani_zapisu(
+void smazani_zapisu();
 
 int main()
 {

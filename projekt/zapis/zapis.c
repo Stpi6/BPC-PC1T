@@ -23,22 +23,22 @@ void novy_zapis(struct zapis* f)
         //  RIDIC
         printf("\r\nZadejte sve jmeno:  ");
         
-        scanf("%s", &f->ridic.jmeno);
+        scanf("%32s", &f->ridic.jmeno);
 
         printf("\r\nZadejte sve prijmeni:  ");
 
-        scanf("%s", &f->ridic.prijmeni);
+        scanf("%32s", &f->ridic.prijmeni);
 
         printf("\r\nZadejte sve ID:  ");
 
-        scanf("%s", &f->ridic.id);
+        scanf("%6s", &f->ridic.id);
 
 
 
         //  AUTO INFO
         printf("\r\nZadejte SPZ vami pouziteho auta pro zapisovanou jizdu:  ");
 
-        scanf("%s", &f->autoo.auto_spz);
+        scanf("%8s", &f->autoo.auto_spz);
 
         printf("\r\nZadejte pocet ujetych kolimetru se zapsanym autem za zapisovanou jizdu:  ");
         
@@ -49,14 +49,14 @@ void novy_zapis(struct zapis* f)
         //  DOBA LETU..
         printf("\r\nZadejte priblizny zacatek zapisovane jizdy ve formatu XX:XX:  ");
 
-        scanf("%s", &f->doba.zacatek);
+        scanf("%5s", &f->doba.zacatek);
 
         printf("\r\nZadejte priblizny konec zapisovane jizdy ve formatu XX:XX :  ");
 
-        scanf("%s", &f->doba.konec);
+        scanf("%5s", &f->doba.konec);
 
 
-        printf("Dekujeme, Vase jizda byla uspesne zapsana a uložena.");
+        printf("\r\nDekujeme, Vase jizda byla uspesne zapsana a ulozena.\r\n");
 
 
 }
