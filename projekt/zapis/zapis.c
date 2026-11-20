@@ -1,7 +1,7 @@
 #include <stdio.h>
-#include <direct.h>
 #include "zapis.h"
 
+// Nacte od uzivatele udaje o nove jizde
 void novy_zapis(struct zapis* f)
 {
       
@@ -61,21 +61,21 @@ void novy_zapis(struct zapis* f)
 
 }
 
+// Prida jeden zaznam o jizde na konec souboru data/jizdy.csv
 void uloz_zapis_do_csv(struct zapis *f)
 {
     FILE *kontrola;
     FILE *soubor;
     int prazdny = 1;
 
-    _mkdir("data");
-
+    // otevre soubor pro cteni, aby zjistil, jestli uz existuje a neni prazdny
     kontrola = fopen("data/jizdy.csv", "r");
 
     if(kontrola != NULL)
     {
-        fseek(kontrola, 0, SEEK_END);
+        fseek(kontrola, 0, SEEK_END);   // presune na konec souboru
 
-        if(ftell(kontrola) != 0)
+        if(ftell(kontrola) != 0)        // zjisti velikost souboru; kdyz neni 0, hlavicka uz v nem je
         {
             prazdny = 0;
         }
@@ -83,6 +83,7 @@ void uloz_zapis_do_csv(struct zapis *f)
         fclose(kontrola);
     }
 
+    // otevre soubor v rezimu "a" (pridani na konec)
     soubor = fopen("data/jizdy.csv", "a");
 
     if(soubor == NULL)
@@ -92,12 +93,57 @@ void uloz_zapis_do_csv(struct zapis *f)
         return;
     }
 
+    // u noveho nebo prazdneho souboru zapise nejdriv hlavicku sloupcu
     if(prazdny == 1)
     {
         fprintf(soubor, "den,mesic,rok,jmeno,prijmeni,id,spz,najezd,zacatek,konec\n");
     }
 
+    // zapise vsechny udaje jizdy jako jeden novy radek CSV
     fprintf(soubor, "%d,%d,%d,%s,%s,%s,%s,%d,%s,%s\n", f->datum.den, f->datum.mesic, f->datum.rok, f->ridic.jmeno, f->ridic.prijmeni, f->ridic.id, f->autoo.auto_spz, f->autoo.najezd, f->doba.zacatek, f->doba.konec);
 
-    fclose(soubor);
+    fclose(soubor); // uzavre soubor
+}
+
+// Nacte vsechny ulozene jizdy ze souboru data/jizdy.csv do pole a vrati jejich pocet
+int nacti_zapisy_z_csv(struct zapis pole[])
+{
+    FILE *soubor;
+    int pocet = 0;
+
+    // otevre soubor pro cteni
+    soubor = fopen("data/jizdy.csv", "r");
+
+    // pokud soubor jeste neexistuje, vrati 0 nactenych zapisu
+    if(soubor == NULL)
+    {
+        return 0;
+    }
+
+    // precte a zahodi prvni radek s hlavickou CSV
+    fscanf(soubor, "%*s");
+
+    // cte zaznamy ze souboru az do jeho konce
+    while(!feof(soubor))
+    {
+        // %[^,] cte text az po carku; kdyz se nacte vsech 10 hodnot, ulozi se do pole a zvysi se pocet
+        if(fscanf(soubor, "%d,%d,%d,%[^,],%[^,],%[^,],%[^,],%d,%[^,],%s",
+                  &pole[pocet].datum.den,
+                  &pole[pocet].datum.mesic,
+                  &pole[pocet].datum.rok,
+                  pole[pocet].ridic.jmeno,
+                  pole[pocet].ridic.prijmeni,
+                  pole[pocet].ridic.id,
+                  pole[pocet].autoo.auto_spz,
+                  &pole[pocet].autoo.najezd,
+                  pole[pocet].doba.zacatek,
+                  pole[pocet].doba.konec) == 10)
+        {
+            pocet++;
+        }
+    }
+
+    fclose(soubor); // uzavre soubor
+
+    return pocet;
 }

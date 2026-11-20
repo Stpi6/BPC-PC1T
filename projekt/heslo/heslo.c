@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <direct.h>
 #include "heslo.h"
 
 int zkouska_delky(char zk[])
@@ -77,8 +76,6 @@ void uloz_heslo_do_souboru(char ulozene[])
 {
     FILE *soubor;
 
-    _mkdir("data");
-
     soubor = fopen("data/heslo.txt", "w");
 
     if(soubor == NULL)
@@ -96,8 +93,6 @@ void uloz_heslo_do_souboru(char ulozene[])
 int nacti_heslo_ze_souboru(char ulozene[])
 {
     FILE *soubor;
-
-    _mkdir("data");
 
     soubor = fopen("data/heslo.txt", "r");
 

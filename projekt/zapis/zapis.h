@@ -49,5 +49,10 @@ struct zapis
 };
 
 void novy_zapis(struct zapis* f);
+// nacte od uzivatele udaje o jedne jizde do struktury
 
 void uloz_zapis_do_csv(struct zapis *f);
+// prida jeden zapis na konec souboru data/jizdy.csv
+
+int nacti_zapisy_z_csv(struct zapis pole[]);
+// nacte ulozene jizdy ze souboru data/jizdy.csv do pole a vrati jejich pocet
