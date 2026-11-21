@@ -5,7 +5,7 @@
 #include "zapis/zapis.h"
 #include "heslo/heslo.h"
 
-void spocitej_radky(uint8_t *prazdne_radky, int *celkem_radku, uint8_t idpr[], long *zacatek_dat)
+void spocitej_radky(int *prazdne_radky, int *celkem_radku, int idpr[], long *zacatek_dat)
 {
     FILE *soubor;
 
@@ -13,7 +13,7 @@ void spocitej_radky(uint8_t *prazdne_radky, int *celkem_radku, uint8_t idpr[], l
 
     *prazdne_radky = 0;
 
-    *celkem_radku = -1;
+    *celkem_radku = 0;
 
     int aktualni_znak;
 
@@ -25,62 +25,74 @@ void spocitej_radky(uint8_t *prazdne_radky, int *celkem_radku, uint8_t idpr[], l
     }
     else 
     {
-        while((aktualni_znak = fgetc(soubor)) != 'E0F')
+
+        while ((aktualni_znak = fgetc(soubor)) != '\n' && aktualni_znak != EOF);
+
+        *zacatek_dat = ftell(soubor);
+
+        predesli_znak = '\n';
+        
+        
+        while((aktualni_znak = fgetc(soubor)) != EOF)
         {
 
-            if(aktualni_znak == '\n') *celkem_radku++;
-
-            if(predesli_znak == '\n' && (isspace(aktualni_znak) != 0 || aktualni_znak == '\n')) 
+            if(predesli_znak == '\n' && isspace(aktualni_znak) == 0)
             {
-                if(isspace(aktualni_znak) != 0)
-                {
+                (*celkem_radku)++;
+            }
+
+            if(predesli_znak == '\n' && isspace(aktualni_znak) != 0) 
+            {
+
+                    (*celkem_radku)++;
+
+                    idpr[*prazdne_radky] = *celkem_radku;
+
+                    (*prazdne_radky)++;
+
+            }
                     
-                    idpr[*prazdne_radky] = celkem_radku + 1;
-
-                    *prazdne_radky++;
-
-                }
-                else
-                {
-
-                    idpr[*prazdne_radky] = celkem_radku;
-
-                    *prazdne_radky++;
-
-                }
-
-            }
-            else if(predesli_znak == '\n' && celkem_radku == 0)
-            {
-
-                *zacatek_dat = ftell(soubor);
-
-            }
             predesli_znak = aktualni_znak;
         }
+
+        idpr[*prazdne_radky] = 0;
 
         fclose(soubor);
     }
     
 }
-//  Spocita vsechny radky v souboru - prekpoklad je ze prvni radek je zahlavi tabulky - PREPSAT ABY SE RADKY PRICITALI PODLE TOHO JESTLI JE PRVNI ZNAK NA NOVEM RADKU PISMENO ABY NEDOCHAZELO K TOMU ZE SE NEZAPISE POSLEDNI ZNAK A TAK SE RADEK NEPRIPOCETL
+//  Spocita vsechny radky v souboru - prekpoklad je ze prvni radek je zahlavi tabulky
 //  Vraci taky pocet v longu pocet bajtu ktere se pouziji pro offset ve funkci nacteni_zaznamu
 
-int nacteni_zaznamu(struct zapis f[], int id_struct_pole)
+int nacteni_zaznamu(struct zapis f[], int id_struct_pole, long offset, int idpr[])
+
 {
     FILE *soubor;
 
-    int u = 0;
+    int o = 0;
 
-    _mkdir("data");
+    int c;
 
-    soubor = fopen("data/zaznamy.csv", "r");
+    soubor = fopen("data/jizdy.csv", "r");
 
     if(soubor == NULL) return 0;
 
-    for(u = 0; u < id_struct_pole; u++) //  id_struct_pole bude 0 - musí byt system kde do nej nejdriv ulozim pocet radku
+    while ((c = fgetc(soubor)) != '\n' && c != EOF);
+
+    for(int u = 0; u < id_struct_pole; u++) 
     {
-        fscanf(soubor, "%d,%d,%d,%32[^,],%32[^,],%6[^,],%8[^,],%d,%5[^,],%5[^\n]\n", &f[u].datum.den, &f[u].datum.mesic, &f[u].datum.rok, f[u].ridic.jmeno, f[u].ridic.prijmeni, f[u].ridic.id, f[u].autoo.auto_spz, &f[u].autoo.najezd, f[u].doba.zacatek, f[u].doba.konec);
+        if ((u + 1) == idpr[o])
+        {
+            o++;
+        }
+        else
+        {
+
+            fscanf(soubor, "%d,%d,%d,%32[^,],%32[^,],%6[^,],%8[^,],%d,%5[^,],%5[^\n]", &f[u].datum.den, &f[u].datum.mesic, &f[u].datum.rok, f[u].ridic.jmeno, f[u].ridic.prijmeni, f[u].ridic.id, f[u].autoo.auto_spz, &f[u].autoo.najezd, f[u].doba.zacatek, f[u].doba.konec);
+        
+        }
+
+        while ((c = fgetc(soubor)) != '\n' && c != EOF);
     }
 
     fclose(soubor);
@@ -111,9 +123,9 @@ int main()
 
     long zacatek_dat = 0;
 
-    uint8_t id_prazdnych_radku[100];
+    int id_prazdnych_radku[100] = {-1};
 
-    uint8_t pocet_prazdnych_radku;
+    int pocet_prazdnych_radku;
 
     struct zapis jizda[100];
 
@@ -122,10 +134,9 @@ int main()
         if(prihlaseni(ulozene_heslo) == 0) return 0;
     }
 
-    spocitej_radky(&pocet_prazdnych_radku,&id_struct_pole,id_prazdnych_radku[100],&zacatek_dat);
+    spocitej_radky(&pocet_prazdnych_radku,&id_struct_pole,id_prazdnych_radku,&zacatek_dat);
 
-
-    if (id_struct_pole < -1)
+    if (id_struct_pole == -3)
     {
         printf("\r\nNeco se pokazilo :( Data ze souboru se nepodarilo nacist. Zadejte cokoliv a stisknet ENTER pro ukonceni programu\r\n\n");
         scanf("%32s", jizda->ridic.jmeno);
@@ -134,17 +145,18 @@ int main()
     else
     {
 
-        //nacteni_zaznamu();
+        nacteni_zaznamu(jizda, id_struct_pole, zacatek_dat, id_prazdnych_radku);
+
 
     }
 
-
+        //id_struct_pole = nacti_zapisy_z_csv(jizda); ZMENA CO SE ZRUSILA MERGENUTIM
     
 
     while(1)
     {
         
-        printf("\r\nMENU\r\n\n1 - Novy zapis\r\n2 - Upravit stavajici zapis\r\n3 - Smazat zapis\r\n4 - Vypsat zapis/y\r\n5 - Nastavit heslo\r\n6 - konec\r\n\n");
+        printf("\r\nMENU\r\n\n1 - Novy zapis\r\n2 - Upravit stavajici zapis\r\n3 - Smazat zapis\r\n4 - Vypsat zapis/y\r\n5 - Nastavit heslo\r\n6 - Konec\r\n\n");
 
         scanf("%d",&vybrano);
 
@@ -199,13 +211,28 @@ int main()
         //Vypsat zapis/y - orientovat se podle id_struct_pole a podle toho nabidnout pocet zapisu k dispozici - scanf do promenne a podle toho vypsat strukturu
             case VYPSAT_ZAPISY:
                 system("cls");
-                
+
+                spocitej_radky(&pocet_prazdnych_radku,&id_struct_pole,id_prazdnych_radku,&zacatek_dat);
+
+                nacteni_zaznamu(jizda, id_struct_pole, zacatek_dat, id_prazdnych_radku);
+
                 for(int x = 0; x < id_struct_pole; x++)
                 {
+
+                    if(x + 1 == id_prazdnych_radku[i])
+                    {
+                        i++;
+                        printf("%d. - ZAPIS SMAZAN\r\n", x+1);
+                    }
+                    
+                    else
                     printf("%d. - %s %s, datum: %d.%d.%d\r\n", x+1, jizda[x].ridic.jmeno, jizda[x].ridic.prijmeni, jizda[x].datum.den, jizda[x].datum.mesic, jizda[x].datum.rok);
                 }
-
+                
                 scanf("%d", &i);
+
+                i = 0;
+
             break;
 
 
