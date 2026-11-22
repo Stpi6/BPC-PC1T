@@ -90,7 +90,6 @@ void uloz_zapis_do_csv(struct zapis *f)
     {
         printf("\r\nZapis se nepodarilo ulozit do souboru data/jizdy.csv.\r\n");
 
-        return;
     }
 
     // u noveho nebo prazdneho souboru zapise nejdriv hlavicku sloupcu
@@ -104,6 +103,47 @@ void uloz_zapis_do_csv(struct zapis *f)
 
     fclose(soubor); // uzavre soubor
 }
+
+// Prepise znovu cely soubor se zmenou
+void uloz_upraveny_zapis_do_csv(struct zapis f[], int celkem_radku, int idpr[])
+{
+
+    FILE *soubor;
+
+    soubor = fopen("data/jizdy.csv", "w");
+
+    if (soubor == NULL) printf("\r\nZapis se nepodarilo ulozit do souboru data/jizdy.csv.\r\n");
+
+    else
+    {
+
+    fprintf(soubor, "den,mesic,rok,jmeno,prijmeni,id,spz,najezd,zacatek,konec\n");
+
+    int e = 0;
+
+    for (int u = 0; u < celkem_radku; u++)
+    { 
+        if (u + 1 == idpr[e])
+        {
+            fprintf(soubor, "\t%d,%d,%d,%s,%s,%s,%s,%d,%s,%s\n", f[u].datum.den, f[u].datum.mesic, f[u].datum.rok, f[u].ridic.jmeno, f[u].ridic.prijmeni, f[u].ridic.id, f[u].autoo.auto_spz, f[u].autoo.najezd, f[u].doba.zacatek, f[u].doba.konec);
+            
+            e++;
+        }
+        
+
+         else   fprintf(soubor, "%d,%d,%d,%s,%s,%s,%s,%d,%s,%s\n", f[u].datum.den, f[u].datum.mesic, f[u].datum.rok, f[u].ridic.jmeno, f[u].ridic.prijmeni, f[u].ridic.id, f[u].autoo.auto_spz, f[u].autoo.najezd, f[u].doba.zacatek, f[u].doba.konec);
+
+                
+    }
+    }
+
+    fclose(soubor);
+
+
+    
+}
+
+
 
 // Nacte vsechny ulozene jizdy ze souboru data/jizdy.csv do pole a vrati jejich pocet
 int nacti_zapisy_z_csv(struct zapis pole[])

@@ -26,22 +26,22 @@ void spocitej_radky(int *prazdne_radky, int *celkem_radku, int idpr[], long *zac
     else 
     {
 
-        while ((aktualni_znak = fgetc(soubor)) != '\n' && aktualni_znak != EOF);
+        while ((aktualni_znak = fgetc(soubor)) != '\n' && aktualni_znak != EOF); // Preskoci hlavicku souboru
 
-        *zacatek_dat = ftell(soubor);
+        *zacatek_dat = ftell(soubor); // Zjisti pozici v souboru, kde zacina prvni zaznam - zatím NENI pouzivano
 
-        predesli_znak = '\n';
+        predesli_znak = '\n'; // Nastaveno aby i prvni radek mohl byt pocitan jako prazdny radek
         
         
-        while((aktualni_znak = fgetc(soubor)) != EOF)
+        while((aktualni_znak = fgetc(soubor)) != EOF) // Dokud neni konec souboru, cte po jednitlivych znaacich 
         {
 
-            if(predesli_znak == '\n' && isspace(aktualni_znak) == 0)
+            if(predesli_znak == '\n' && isspace(aktualni_znak) == 0) // Kdyz je predesl znak novy radek a aktualni znak je nejaky znak/cislo , tak se inkrementuje pocet radku
             {
                 (*celkem_radku)++;
             }
 
-            if(predesli_znak == '\n' && isspace(aktualni_znak) != 0) 
+            if(predesli_znak == '\n' && isspace(aktualni_znak) != 0) // Kdyz je predesl znak novy radek a aktualni znak je bílý znak, tak se inkrementuje pocet prazdnych radku a cislo radku se ulozi do pole idpr
             {
 
                     (*celkem_radku)++;
@@ -55,14 +55,14 @@ void spocitej_radky(int *prazdne_radky, int *celkem_radku, int idpr[], long *zac
             predesli_znak = aktualni_znak;
         }
 
-        idpr[*prazdne_radky] = 0;
+        idpr[*prazdne_radky] = 0; // na konec se ulozi do pole 0 aby se nemohlo stat ze se hodnota v pameti bude nahodou rovnat cislu nacitaneho radku ve funkci nacteni_zaznamu a preskoci se zaznam, ktery by se nemel preskocit
 
         fclose(soubor);
     }
     
 }
 //  Spocita vsechny radky v souboru - prekpoklad je ze prvni radek je zahlavi tabulky
-//  Vraci taky pocet v longu pocet bajtu ktere se pouziji pro offset ve funkci nacteni_zaznamu
+// Vrati v longu zacatek_dat pozici v souboru, kde zacina prvni zaznam
 
 int nacteni_zaznamu(struct zapis f[], int id_struct_pole, long offset, int idpr[])
 
@@ -77,29 +77,162 @@ int nacteni_zaznamu(struct zapis f[], int id_struct_pole, long offset, int idpr[
 
     if(soubor == NULL) return 0;
 
-    while ((c = fgetc(soubor)) != '\n' && c != EOF);
+    while ((c = fgetc(soubor)) != '\n' && c != EOF); // Preskoci hlavicku souboru
 
     for(int u = 0; u < id_struct_pole; u++) 
     {
-        if ((u + 1) == idpr[o])
+        if ((u + 1) == idpr[o]) // Pokud se vypisovany zaznam rovna id prazdneho radku, preskoci ho a inkrementuje o
         {
             o++;
         }
-        else
+        else // Jinak nacita zaznamy do struktury zapis
         {
 
             fscanf(soubor, "%d,%d,%d,%32[^,],%32[^,],%6[^,],%8[^,],%d,%5[^,],%5[^\n]", &f[u].datum.den, &f[u].datum.mesic, &f[u].datum.rok, f[u].ridic.jmeno, f[u].ridic.prijmeni, f[u].ridic.id, f[u].autoo.auto_spz, &f[u].autoo.najezd, f[u].doba.zacatek, f[u].doba.konec);
         
         }
 
-        while ((c = fgetc(soubor)) != '\n' && c != EOF);
+        while ((c = fgetc(soubor)) != '\n' && c != EOF); // Dojede nakonec radku a preskoci ho, aby se nacitalo od zacatku dalsiho radku
     }
 
     fclose(soubor);
 
     return 1;
 }
-//  DOPSAT
+//  Nacte vsechny zaznamy ze souboru data/jizdy.csv do struktury zapis, preskoci prazdne radky a vrati 1 pokud se vse podarilo nactit, jinak 0
+
+void vypis_zaznamy(int id_radku, struct zapis jizda[], int id_prazdnych_radku[])
+{
+
+    int i = 0;
+
+    for(int x = 0; x < id_radku; x++)
+    {
+
+        if(x + 1 == id_prazdnych_radku[i])
+        {
+            i++;
+            printf("%d. - ZAPIS SMAZAN/POSKOZEN\r\n", x+1);
+        }
+                    
+        else
+        printf("%d. - %s %s, datum: %d.%d.%d\r\n", x+1, jizda[x].ridic.jmeno, jizda[x].ridic.prijmeni, jizda[x].datum.den, jizda[x].datum.mesic, jizda[x].datum.rok);
+    }
+
+}
+//  Vypise vsechny zaznamy ze struktury zapis, u prazdnych radku vypise informaci ze zaznam byl smazan/poskozen
+
+
+
+void upraveni_zaznamu(struct zapis* f)
+{
+    printf("Zadejte cislo podle toho, jakou kategorii zapisu chcete upravit: \r\n1 - Datum\r\n2 - Cas\r\n3 - Ridic\r\n4 -Auto\r\n\n     ");
+
+    int l;
+
+    scanf("%d", &l);
+
+    switch (l)
+    {
+        // Upravit datum
+        case 1:
+
+            printf("\r\nZadejte cislo aktualniho/dnesniho dne v mesici:  ");
+
+            scanf("%d", &f->datum.den);
+
+            printf("\r\nZadejte cislo aktualniho/dnesniho mesice:  ");
+
+            scanf("%d", &f->datum.mesic);
+
+            printf("\r\nZadejte cislo aktualniho/dnesniho roku:  ");
+
+            scanf("%d", &f->datum.rok);
+
+        break;
+
+         // Upravit čas
+        case 2:
+                   
+            printf("\r\nZadejte priblizny zacatek zapisovane jizdy ve formatu XX:XX:  ");
+
+            scanf("%5s", &f->doba.zacatek);
+
+            printf("\r\nZadejte priblizny konec zapisovane jizdy ve formatu XX:XX :  ");
+
+            scanf("%5s", &f->doba.konec);
+
+        break;
+
+        // Upravit řidiče
+        case 3:
+
+            printf("\r\nZadejte sve jmeno:  ");
+        
+            scanf("%32s", &f->ridic.jmeno);
+
+            printf("\r\nZadejte sve prijmeni:  ");
+
+            scanf("%32s", &f->ridic.prijmeni);
+
+            printf("\r\nZadejte sve ID:  ");
+
+            scanf("%6s", &f->ridic.id);    
+                    
+        break;
+
+        // Upravit auto
+        case 4:
+
+            printf("\r\nZadejte SPZ vami pouziteho auta pro zapisovanou jizdu:  ");
+
+            scanf("%8s", &f->autoo.auto_spz);
+
+            printf("\r\nZadejte pocet ujetych kolimetru se zapsanym autem za zapisovanou jizdu:  ");
+        
+            scanf("%d", &f->autoo.najezd);            
+            
+        break;
+                    
+        default:
+                        printf("Nejedna se o platnou volbu. Budete presmerovani zpet do menu.\r\n");
+
+        break;
+    }
+
+    printf("Dekujeme, Vase zmena byla uspesne ulozena.");
+}
+// Upravi konkretni data vybraneho zaznamu
+
+
+int kontrola_obsahu_zapisu(int pocet_prazdnych_radku, int i, int idpr[])
+{
+    for(int n = 0; n < pocet_prazdnych_radku; n++)
+    {
+        if(i == idpr[n])
+        {
+            printf("\r\nZadany zapis je smazany/poskozen a nelze ho upravit.\r\n");
+            i = -1;
+            return 0;
+        }
+        else return 1;
+
+    }
+
+
+   
+}
+//  Zkontroluje jesli zaznam, ktery se ma upravit neni smazany/poskozen a vrati 0 pokud je smazany/poskozen a 1 pokud je v poradku
+
+void blizsi_info_zapisu(struct zapis f[])
+{
+
+
+
+
+
+}
+
 
 
 enum menu { NOVY_ZAPIS = 1, UPRAVIT_ZAPIS, SMAZAT_ZAPIS, VYPSAT_ZAPISY, NASTAVIT_HESLO, KONEC };
@@ -183,7 +316,32 @@ int main()
         //Upravit stavajici zapis - bud podle ciselzapisu nebo vypsat ke kazdemu zapisu ktery jde upravit prijmeni  a datum pro lepsi orientaci
             case UPRAVIT_ZAPIS:
                 system("cls");
-                printf("B");
+
+                printf("Upravit je mozne nasledujici zapisy: \r\n");
+                
+                spocitej_radky(&pocet_prazdnych_radku,&id_struct_pole,id_prazdnych_radku,&zacatek_dat);
+
+                nacteni_zaznamu(jizda, id_struct_pole, zacatek_dat, id_prazdnych_radku);
+
+                vypis_zaznamy(id_struct_pole, jizda, id_prazdnych_radku);
+
+                printf("\r\nZadejte cislo zapisu, ktery chcete upravit: \r\n");
+
+                scanf("%d", &i);
+
+                i = i - 1;
+
+                if(kontrola_obsahu_zapisu(pocet_prazdnych_radku, i, id_prazdnych_radku) == 1)
+                {
+                    upraveni_zaznamu(&jizda[i]);
+                    uloz_upraveny_zapis_do_csv(jizda, id_struct_pole, id_prazdnych_radku);
+                }
+                else
+                {
+                    novy_zapis(&jizda[i]);
+                    uloz_upraveny_zapis_do_csv(jizda, id_struct_pole, id_prazdnych_radku);
+                }
+                
 
                 i = 0;
             break;
@@ -216,20 +374,36 @@ int main()
 
                 nacteni_zaznamu(jizda, id_struct_pole, zacatek_dat, id_prazdnych_radku);
 
-                for(int x = 0; x < id_struct_pole; x++)
-                {
+                vypis_zaznamy(id_struct_pole, jizda, id_prazdnych_radku);
 
-                    if(x + 1 == id_prazdnych_radku[i])
-                    {
-                        i++;
-                        printf("%d. - ZAPIS SMAZAN\r\n", x+1);
-                    }
-                    
-                    else
-                    printf("%d. - %s %s, datum: %d.%d.%d\r\n", x+1, jizda[x].ridic.jmeno, jizda[x].ridic.prijmeni, jizda[x].datum.den, jizda[x].datum.mesic, jizda[x].datum.rok);
-                }
-                
+                printf("\r\nChcete blizsi informace o nejakem ze zapisu?\r\nANO - 1\r\nNE - 0\r\n\n     ");
+
                 scanf("%d", &i);
+
+                if(i == 1)
+                {
+                    printf("\r\nVyberte cislo zaznamu:  ");
+
+                    scanf("%d", &i);
+
+                    if(i > id_struct_pole)
+                    {
+
+                        printf("\r\nNevybrali jste spravnou moznost. Budete presmerovani do menu.\r\n");
+
+                    }
+
+                    else if (kontrola_obsahu_zapisu(pocet_prazdnych_radku, i, id_prazdnych_radku) == 1)
+                    {
+                        i = i - 1;
+
+                        printf("\r\nDetail zaznamu cislo: %d\r\n\nDatum - %d.%d.%d\r\nCas - od %s do %s\r\nRidic - %s %s\r\nAuto - SPZ: %s\r\n     - Najezd: %d\r\n", i + 1, jizda[i].datum.den, jizda[i].datum.mesic, jizda[i].datum.rok, jizda[i].doba.zacatek, jizda[i].doba.konec, jizda[i].ridic.jmeno, jizda[i].ridic.prijmeni, jizda[i].autoo.auto_spz, jizda[i].autoo.najezd);
+                    }
+                    else printf("\r\nVami zadany zaznam je smazany nebo poskozeny a proto o nem nejsou blizsi informace. Budete presmerovani do menu\r\n\n");
+                    
+                }
+
+                
 
                 i = 0;
 
