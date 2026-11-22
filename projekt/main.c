@@ -329,10 +329,9 @@ int main()
 
                 scanf("%d", &i);
 
-                i = i - 1;
-
                 if(kontrola_obsahu_zapisu(pocet_prazdnych_radku, i, id_prazdnych_radku) == 1)
                 {
+                    i = i - 1;
                     upraveni_zaznamu(&jizda[i]);
                     uloz_upraveny_zapis_do_csv(jizda, id_struct_pole, id_prazdnych_radku);
                 }
@@ -399,7 +398,6 @@ int main()
 
                         printf("\r\nDetail zaznamu cislo: %d\r\n\nDatum - %d.%d.%d\r\nCas - od %s do %s\r\nRidic - %s %s\r\nAuto - SPZ: %s\r\n     - Najezd: %d\r\n", i + 1, jizda[i].datum.den, jizda[i].datum.mesic, jizda[i].datum.rok, jizda[i].doba.zacatek, jizda[i].doba.konec, jizda[i].ridic.jmeno, jizda[i].ridic.prijmeni, jizda[i].autoo.auto_spz, jizda[i].autoo.najezd);
                     }
-                    else printf("\r\nVami zadany zaznam je smazany nebo poskozeny a proto o nem nejsou blizsi informace. Budete presmerovani do menu\r\n\n");
                     
                 }
 
