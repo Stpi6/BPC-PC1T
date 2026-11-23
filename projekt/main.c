@@ -122,7 +122,59 @@ void vypis_zaznamy(int id_radku, struct zapis jizda[], int id_prazdnych_radku[])
 }
 //  Vypise vsechny zaznamy ze struktury zapis, u prazdnych radku vypise informaci ze zaznam byl smazan/poskozen
 
+void smazani_zapisu(struct zapis f[], int celkem_radku, int idpr[], int smazany_radek, int pocet_prazdnych_radku)
+{
+    FILE *soubor;
 
+    soubor = fopen("data/jizdy.csv", "w");
+
+    if (soubor == NULL) printf("\r\nZapis se nepodarilo ulozit do souboru data/jizdy.csv.\r\n");
+
+    else
+    {
+
+    idpr[pocet_prazdnych_radku] = smazany_radek;
+
+    idpr[pocet_prazdnych_radku + 1] = 0;
+
+    while(idpr[pocet_prazdnych_radku] < idpr[pocet_prazdnych_radku - 1] && pocet_prazdnych_radku > 0)
+    {
+
+        idpr[pocet_prazdnych_radku - 1] = idpr[pocet_prazdnych_radku] + idpr[pocet_prazdnych_radku - 1];
+
+        idpr[pocet_prazdnych_radku] = idpr[pocet_prazdnych_radku - 1] - idpr[pocet_prazdnych_radku];
+
+        idpr[pocet_prazdnych_radku -1] = idpr[pocet_prazdnych_radku - 1] - idpr[pocet_prazdnych_radku];
+
+        pocet_prazdnych_radku--;
+
+    }
+
+    fprintf(soubor, "den,mesic,rok,jmeno,prijmeni,id,spz,najezd,zacatek,konec\n");
+
+    int e = 0;
+
+    for (int u = 0; u < celkem_radku; u++)
+    { 
+        if (u + 1 == idpr[e])
+        {
+            fprintf(soubor, "\t%d,%d,%d,%s,%s,%s,%s,%d,%s,%s\n", f[u].datum.den, f[u].datum.mesic, f[u].datum.rok, f[u].ridic.jmeno, f[u].ridic.prijmeni, f[u].ridic.id, f[u].autoo.auto_spz, f[u].autoo.najezd, f[u].doba.zacatek, f[u].doba.konec);
+            
+            e++;
+        }
+        
+
+         else   fprintf(soubor, "%d,%d,%d,%s,%s,%s,%s,%d,%s,%s\n", f[u].datum.den, f[u].datum.mesic, f[u].datum.rok, f[u].ridic.jmeno, f[u].ridic.prijmeni, f[u].ridic.id, f[u].autoo.auto_spz, f[u].autoo.najezd, f[u].doba.zacatek, f[u].doba.konec);
+
+                
+    }
+    }
+
+    fclose(soubor);
+
+
+    
+}
 
 void upraveni_zaznamu(struct zapis* f)
 {
@@ -224,14 +276,6 @@ int kontrola_obsahu_zapisu(int pocet_prazdnych_radku, int i, int idpr[])
 }
 //  Zkontroluje jesli zaznam, ktery se ma upravit neni smazany/poskozen a vrati 0 pokud je smazany/poskozen a 1 pokud je v poradku
 
-void blizsi_info_zapisu(struct zapis f[])
-{
-
-
-
-
-
-}
 
 
 
@@ -352,14 +396,17 @@ int main()
 
                 printf("Smazat je mozne nasledujici zapisy: \r\n");
 
-                while(i < id_struct_pole)
-                {
-                    printf("%d. - %s %s, datum: %d.%d.%d\r\n", i+1, jizda[i].ridic.jmeno, jizda[i].ridic.prijmeni, jizda[i].datum.den, jizda[i].datum.mesic, jizda[i].datum.rok);
+                spocitej_radky(&pocet_prazdnych_radku,&id_struct_pole,id_prazdnych_radku,&zacatek_dat);
 
-                    i++;
-                }
+                nacteni_zaznamu(jizda, id_struct_pole, zacatek_dat, id_prazdnych_radku);
+
+                vypis_zaznamy(id_struct_pole, jizda, id_prazdnych_radku);
+
+                printf("Zadejte cislo zapisu, ktery chcete smazat:  ");
 
                 scanf("%d", &i);
+
+                smazani_zapisu(jizda, id_struct_pole, id_prazdnych_radku, i, pocet_prazdnych_radku);
 
                 i = 0;
             break;

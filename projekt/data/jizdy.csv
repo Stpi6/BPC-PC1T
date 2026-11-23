@@ -1,10 +1,10 @@
 den,mesic,rok,jmeno,prijmeni,id,spz,najezd,zacatek,konec
 12,9,2026,Marek,Vasak,228301,1uu3018,250,8:00,15:00
 2,11,2026,Adam,Danek,300211,OK76LL3A,50,20:00,20:40
-10,11,1236,flok,Bjornson,1420,Choc1il,555,20:00,21:00
+	10,11,1236,flok,Bjornson,1420,Choc1il,555,20:00,21:00
 	0,0,0,,,,,0,,
 8,3,2026,Pista,Rufus,297113,7DAWU991,1000,9:00,16:45
 3,7,2026,Jiri,Ulrych,317200,5AA2FD7,720,6:00,18:00
 20,10,2026,Lukas,Kuzma,188120,G77A460,20,12:00,12:10
 20,10,2026,Eduard,Mantocky,791103,G77A460,20,12:00,12:10
-8,12,2026,Radek,Netusil,621004,SPZ321S,120,00:00,3:00
+4,3,2026,Radek,Netusil,621004,SPZ321S,120,00:00,3:00
